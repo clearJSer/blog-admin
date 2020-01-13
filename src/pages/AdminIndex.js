@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Alert } from 'antd';
 import { Route} from 'react-router-dom';
 import AddArticle from './AddArticle';
 import ArticleList from './ArticleList';
@@ -25,7 +25,7 @@ function AdminIndex(props) {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <div className="logo">做一名内容生产者</div>
+        <div className="logo">分享知识就是赚钱</div>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1">
             <Icon type="pie-chart" />
@@ -57,6 +57,7 @@ function AdminIndex(props) {
       <Layout>
         {/* <Header style={{ background: '#fff', padding: 0 }} /> */}
         <Content style={{ margin: '0 16px' }}>
+					<Alert message="不停地写，大量地写，现在就开始写。长期写，你会意识到这给自己带来的巨大价值。" type="error" />
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>后台管理</Breadcrumb.Item>
             <Breadcrumb.Item>工作台</Breadcrumb.Item>
@@ -65,6 +66,7 @@ function AdminIndex(props) {
             <div>
 									<Route path="/index/" exact component={AddArticle} />
 									<Route path="/index/add" exact component={AddArticle} />
+									<Route path="/index/add/:id" exact component={AddArticle} />
  									<Route path="/index/list" exact component={ArticleList} />
             </div>
           </div>

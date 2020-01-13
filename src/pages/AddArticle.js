@@ -30,9 +30,16 @@ function AddArticle(props) {
     smartLists: true,
     smartypants: false,
   });
-  useEffect(() => {
-    getTypeInfo();
-  }, []);
+	useEffect(()=>{
+		getTypeInfo()
+		console.log(props)
+    //获得文章ID
+    let tmpId = props.match.params.id 
+    if(tmpId){
+        setArticleId(tmpId)
+        getArticleById(tmpId)
+    } 
+},[])
   const changeContent = e => {
     setArticleContent(e.target.value);
     let html = marked(e.target.value);
@@ -49,8 +56,8 @@ function AddArticle(props) {
     axios({
       method: 'get',
       url: servicePath.getTypeInfo,
-      header: { 'Access-Control-Allow-Origin': '*' },
-      withCredentials: true,
+			header:{ 'Access-Control-Allow-Origin':'*' },
+      withCredentials: true
     }).then(res => {
       if (res.data.data === '没有登录') {
         localStorage.removeItem('openId');
@@ -59,7 +66,27 @@ function AddArticle(props) {
         setTypeInfo(res.data.data);
       }
     });
-  };
+	};
+	const getArticleById = (id)=>{
+		axios(servicePath.getArticleById+id,{ 
+        withCredentials: true,
+        header:{ 'Access-Control-Allow-Origin':'*' }
+    }).then(
+        res=>{
+            //let articleInfo= res.data.data[0]
+            setArticleTitle(res.data.data[0].title)
+            setArticleContent(res.data.data[0].article_content)
+            let html=marked(res.data.data[0].article_content)
+            setMarkdownContent(html)
+            setIntroducemd(res.data.data[0].introduce)
+            let tmpInt = marked(res.data.data[0].introduce)
+            setIntroducehtml(tmpInt)
+            setShowDate(res.data.data[0].addTime)
+            setSelectType(res.data.data[0].typeId)
+
+        }
+    )
+}
   const selectTypeHandler = data => {
     setSelectType(data);
   };
@@ -153,7 +180,7 @@ function AddArticle(props) {
           <br />
           <Row gutter={10}>
             <Col span={12}>
-              <TextArea className="markdown-content" rows={35} placeholder="文章内容" onChange={changeContent} />
+              <TextArea className="markdown-content" rows={35} placeholder="文章内容" onChange={changeContent} value={articleContent}/>
             </Col>
             <Col span={12}>
               <div className="show-html" dangerouslySetInnerHTML={{ __html: markdownContent }}></div>
@@ -172,7 +199,7 @@ function AddArticle(props) {
             </Col>
             <Col span={24}>
               <br />
-              <TextArea rows={4} placeholder="文章简介" onChange={changeIntroduce} />
+              <TextArea rows={4} placeholder="文章简介" onChange={changeIntroduce} value={introducemd}/>
               <br />
               <br />
               <div className="introduce-html" dangerouslySetInnerHTML={{ __html: introducehtml }}></div>

@@ -30,9 +30,8 @@ function Login(props) {
       method: 'post',
       url: servicePath.checkLogin,
       data: dataProps,
-      withCredentials: true,
+			withCredentials: true,
     }).then(res => {
-      console.log(res.data);
       setIsLoading(false);
       if (res.data.data === '登录成功') {
         localStorage.setItem('openId', res.data.openId);
